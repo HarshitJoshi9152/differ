@@ -1,21 +1,68 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdbool.h>
 
-#define tablesize 100
+#include "hash.h"
+
+
+// its to check if lines exist or not so bool should be fine ... ig.
 
 
 // salt, last -> result in the same slot !
-int hash(char *key) {
+int hash(char *key, int lineNo) {
     uint32_t slot = 0;
 
     for (uint8_t i = 0; i < strlen(key); i++) {
         slot += key[i];
     }
 
-    slot = slot * strlen(key);
+    slot = slot * strlen(key) * lineNo;
 
-    return slot % tablesize;
+    return slot % TABLESIZE;
+}
+
+
+static bool *hash_table = NULL;
+
+// set *$hash_table to &table provided by main.c !
+void init_hash_table(bool *table) {
+    hash_table = table;
+}
+
+bool hash_insert(char *key, int lineNo) {
+    int slot = hash(key, lineNo);
+    if (hash_table[slot] != false) return false; // collision ! slot is occupied.
+    return (hash_table[slot] = true);
+};
+
+bool hash_lookup(char *key, int lineNo) {
+    int slot = hash(key, lineNo);
+    return hash_table[slot];
+    // if (hash_table[slot] != 0) return false; // collision !
+    // return (hash_table[slot] = true);
+}
+
+void print_hash(uint8_t limit) {
+    printf("Slots:\titems:\n");
+    // printf("limit: <%d>\n", limit); // NULL means 0;
+    limit = (limit == 0 || limit > TABLESIZE) ? TABLESIZE : limit;
+    for (uint8_t i = 0; i < limit; ++i) {
+        printf("%d\t %d\n", i, hash_table[i]);
+    }
+}
+
+// I wonder which one would be better....
+// bool hash_delete(char *key, int lineNo) {
+//     int slot = hash(key, lineNo);
+//     if (hash_table[slot] == false) return false; // collision ! slot is occupied.
+//     hash_table[slot] = false;
+//     return true;
+// }
+
+void hash_delete(char *key, int lineNo) {
+    int slot = hash(key, lineNo);
+    hash_table[slot] = false;
 }
 
 // A good hash function: https://www.cs.cornell.edu/courses/cs312/2008sp/lectures/lec21.html
