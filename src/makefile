@@ -7,8 +7,10 @@ build_dir=../build
 # https://stackoverflow.com/a/2515000/9596267
 all: differ
 
-differ: $(build_dir)/main.o $(build_dir)/hash.o
-	$(CC) $(CFLAGS) $(build_dir)/main.o $(build_dir)/hash.o -o $(build_dir)/differ
+# differ: $(build_dir)/main.o $(build_dir)/hash.o  $(build_dir)/files.o
+differ: $(build_dir)/*.o
+	$(CC) $(CFLAGS) $(build_dir)/*.o -o $(build_dir)/differ
+# previously was $(CC) $(CFLAGS) $(build_dir)/main.o $(build_dir)/hash.o -o $(build_dir)/differ
 
 # this is avoid typing this section for all the .c files we want to compile
 # but this compiles them in the current dir, we want to do so in the build/ dir

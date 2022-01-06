@@ -1,34 +1,51 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <errno.h>
 
 #include "hash.h"
+#include "files.h"
 
-int main() {
-    // char* key = "name";
-    // int slot = hash(key, 1);
-    // printf("slot: %d\n", slot);
+int main(int argc, char *argv[]) {
 
-    // key = "salt";
-    // slot = hash(key, 2);
-    // printf("slot: %d\n", slot);
+    // https://stackoverflow.com/questions/9642732/parsing-command-line-arguments-in-c
+    // we could use https://github.com/cofyc/argparse or https://github.com/tsoding/flag.h too !
+    // man getopt : get_option; optin: optionindex (next to be parsed); optarg: holds the actual value *char
+    // $ cheat c getopt
+    // int rt = getopt(argc, argv, "f::");
+    // // :: means optional argument and : means required arg
+    // // : captures both -fname and -f name BUT :: doesn't capture -f name1
 
-    // key = "last";
-    // slot = hash(key, 3);
-    // printf("slot: %d\n", slot);
+    // printf("rt <%c>\n", rt);
+    // if (rt != -1 && optarg != NULL) printf("%s\n", optarg);
 
-    bool hash_table[TABLESIZE] = {12};
-    init_hash_table(&hash_table);
+    // to be taken in from the argv
+    const char* demoFilename1 = "../test/file1.txt";
+    const char* demoFilename2 = "../test/file2.txt";
 
-    hash_insert("nice ck", 10);
-    bool exists = hash_lookup("nice ck", 10);
-    printf("exists <%d>\n", exists);
+    char* f1 = readFile(demoFilename1);
+    char* f2 = readFile(demoFilename2);
 
-    hash_insert("nice ck", 10);
-    exists = hash_lookup("niadse ck", 10);
-    printf("exists <%d>\n", exists);
+    printf(f1);
+    printf(f2);
 
-    print_hash(0);
+    free(f1);
+    free(f2);
+
+    // bool hash_table[TABLESIZE] = {12};
+    // init_hash_table(&hash_table);
+
+    // hash_insert("nice ck", 10);
+    // bool exists = hash_lookup("nice ck", 10);
+    // printf("exists <%d>\n", exists);
+
+    // hash_insert("nice ck", 10);
+    // exists = hash_lookup("niadse ck", 10);
+    // printf("exists <%d>\n", exists);
+
+    // print_hash(0);
 
     return 0;
 }
