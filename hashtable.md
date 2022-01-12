@@ -12,12 +12,11 @@ of lists. An integer, `n`, keeps track of the total number of items in all lists
 
 I found something cool : https://www.cs.dartmouth.edu/doug/diff.pdf
 
-diff input diff output
-same input same output | consistent
-
-avoid collision
-
-information diffusion
+properties of a good hash function !
+    diff input diff output
+    same input same output | consistency
+    avoid collision
+    information diffusion
 
 toread:
     https://stackoverflow.com/questions/12671383/benefits-of-header-only-libraries

@@ -1,0 +1,55 @@
+this is a line
+<tempLine->data 0x55da850f6480>
+<tempLine 0x7ffcc62d6860>
+thiss is anaother
+<tempLine->data 0x55da850f64f0>
+<tempLine 0x55da850f6560>
+
+<tempLine->data 0x55da850f6580>
+<tempLine 0x55da850f65f0>
+<tempLine->data 0x55da850f6610>
+<tempLine 0x55da850f6680>
+this is a line
+<tempLine->data 0x55da850f66a0>
+<tempLine 0x7ffcc62d6870>
+thiss is anaother.
+<tempLine->data 0x55da850f6710>
+<tempLine 0x55da850f6780>
+this si new !
+<tempLine->data 0x55da850f67a0>
+<tempLine 0x55da850f6810>
+
+<tempLine->data 0x55da850f6830>
+<tempLine 0x55da850f68a0>
+<tempLine->data 0x55da850f68c0>
+<tempLine 0x55da850f6930>
+
+
+
+
+
+
+
+(gdb) l
+119     void freeLinkedLines(LinkedLines* line)
+120     {
+121         LinkedLines *tempLine = line;
+122         while(tempLine) {
+123             free(tempLine->data);
+124             free(tempLine); //double free error !
+125
+126             // if (tempLine->nextLine == NULL) break;
+127             tempLine = tempLine->nextLine;
+128         }
+(gdb) n
+127             tempLine = tempLine->nextLine;
+(gdb) p tempLine->nextLine 
+$7 = (struct linkedLines *) 0x555555559010
+(gdb) info local
+tempLine = 0x555555559560
+(gdb) info args 
+line = 0x555555559560
+
+
+
+i suspect that it wpuld reach 9560 (previosly on stack ) at sometime

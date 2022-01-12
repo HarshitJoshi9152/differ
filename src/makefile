@@ -7,15 +7,16 @@ build_dir=../build
 # https://stackoverflow.com/a/2515000/9596267
 all: differ
 
-# differ: $(build_dir)/main.o $(build_dir)/hash.o  $(build_dir)/files.o
-differ: $(build_dir)/*.o
+# differ: $(build_dir)/*.o
+differ: $(build_dir)/main.o $(build_dir)/hash.o  $(build_dir)/files.o
 	$(CC) $(CFLAGS) $(build_dir)/*.o -o $(build_dir)/differ
 # previously was $(CC) $(CFLAGS) $(build_dir)/main.o $(build_dir)/hash.o -o $(build_dir)/differ
 
 # this is avoid typing this section for all the .c files we want to compile
 # but this compiles them in the current dir, we want to do so in the build/ dir
 $(build_dir)/%.o: %.c
-	$(CC) $(CFLAGS) -c -o $(build_dir)/$@ $<
+	$(CC) $(CFLAGS) -c -o $@ $<
+# $(CC) $(CFLAGS) -c -o $(build_dir)/$@ $<
 
 # $@ and $< https://unix.stackexchange.com/a/116553/497721
 # i used `$(CC) $(CFLAGS) -c $^` before
