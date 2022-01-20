@@ -31,24 +31,34 @@ void init_hash_table(bool *table) {
 }
 
 bool hash_insert(char *key, int lineNo) {
+    // printf("%s <%d>\n", key, lineNo);
     int slot = hash(key, lineNo);
     if (hash_table[slot] != false) return false; // collision ! slot is occupied.
     return (hash_table[slot] = true);
 };
 
 bool hash_lookup(char *key, int lineNo) {
+    // printf("%s <%d>\n", key, lineNo);
     int slot = hash(key, lineNo);
     return hash_table[slot];
     // if (hash_table[slot] != 0) return false; // collision !
     // return (hash_table[slot] = true);
 }
 
-void print_hash(uint8_t limit) {
+void print_hash(uint8_t limit, bool true_only) {
     printf("Slots:\titems:\n");
     // printf("limit: <%d>\n", limit); // NULL means 0;
     limit = (limit == 0 || limit > TABLESIZE) ? TABLESIZE : limit;
-    for (uint8_t i = 0; i < limit; ++i) {
-        printf("%d\t %d\n", i, hash_table[i]);
+    for (uint8_t i = 0; i < limit; ++i)
+    {
+        if (true_only)
+        {
+            if (hash_table[i] == true)
+                printf("%d\t %d\n", i, hash_table[i]);
+        }
+        else {
+            printf("%d\t %d\n", i, hash_table[i]);
+        }
     }
 }
 

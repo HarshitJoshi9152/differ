@@ -7,7 +7,7 @@
 
 int hash(char *key, int lineNo);
 void init_hash_table();
-void print_hash(uint8_t);
+void print_hash(uint8_t limit, bool true_only);
 bool hash_lookup(char *key, int lineNo);
 bool hash_insert(char *key, int lineNo);
 void hash_delete(char *key, int lineNo);

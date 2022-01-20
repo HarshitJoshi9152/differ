@@ -52,43 +52,78 @@ int main(int argc, char *argv[]) {
     char *f1 = readFile(file_path1);
     char *f2 = readFile(file_path2);
 
-    // printf(f1);
-    // printf(f2);
-
-    // char * ff1 = f1;
-    // char * ff2 = f2;
-    // free(f1);
-    // free(f2);
 
     // spliting file contents by lines.
     LinkedLines f_split_by_lines_1 = splitByLines(f1);
-    // printf("<%s>\n\n", f_split_by_lines_1.data);
-    // printf("<%p>\n\n", f_split_by_lines_1.nextLine);
-
     LinkedLines f_split_by_lines_2 = splitByLines(f2);
 
-    printlines(&f_split_by_lines_1);
-    printlines(&f_split_by_lines_2);
-
-    freeLinkedLines(f_split_by_lines_1.nextLine);
-    freeLinkedLines(f_split_by_lines_2.nextLine);
+    // freeing files in memory
+    free(f1);
+    free(f2);
 
     // printlines(&f_split_by_lines_1);
     // printlines(&f_split_by_lines_2);
 
+    bool hash_table[TABLESIZE] = {0};
+    uint64_t tableItemsCount = 0;
 
-    // bool hash_table[TABLESIZE] = {12};
-    // init_hash_table(&hash_table);
+    init_hash_table(&hash_table);
 
-    // hash_insert("nice ck", 10);
-    // bool exists = hash_lookup("nice ck", 10);
-    // printf("exists <%d>\n", exists);
+    // recording lines' unique existence from file 1 into hash_table.
+    LinkedLines *tempLine = &f_split_by_lines_1;
+    uint64_t linesCount = 1;
+    while(tempLine) {
+        char* line = tempLine->data;
 
-    // hash_insert("nice ck", 10);
-    // exists = hash_lookup("niadse ck", 10);
-    // printf("exists <%d>\n", exists);
+        // int slot = hash(line);
+        bool inserted = hash_insert(line, linesCount);
+        if (inserted == false) {
+            fprintf(stderr, "COllision ! @ %d %s\n line: %s <%ld>\n", __LINE__, __FILE__, line, linesCount);
+            exit(1);
+        }
 
-    // print_hash(0);
+        linesCount++;
+        tableItemsCount++;
+
+        tempLine = tempLine->nextLine;
+    }
+    
+    // check if file2 contains the same lines too !
+    tempLine = &f_split_by_lines_2;
+    linesCount = 1;
+    uint64_t file2_mismatches = 0;
+    while(tempLine) {
+        char* line = tempLine->data;
+
+        // int slot = hash(line);
+        bool found = hash_lookup(line, linesCount);
+        if (found == true) {
+            tableItemsCount--;
+        } else {
+            file2_mismatches++;
+        }
+
+        linesCount++;
+
+        tempLine = tempLine->nextLine;
+    }
+
+    // print_hash(0, true);
+
+    // we need to output this like a table !
+    printf("total mismatches : %ld \n", tableItemsCount + file2_mismatches);
+    printf("mismatched in %s : %ld \n", file_path1, tableItemsCount);
+    printf("mismatches in %s : %ld \n", file_path2, file2_mismatches);
+
+    freeLinkedLines(f_split_by_lines_1.nextLine); // f_split_by_lines_1 is allocated on the stack !
+    freeLinkedLines(f_split_by_lines_2.nextLine);
 
     return 0;
 }
+
+/* TODO
+
+1. bad code change it to make both files hash_tables and compare the hash_tables to find differences
+2. somehow add reporting which lines are different (line and lineNo) and identify diff content on same line nos.
+
+*/
