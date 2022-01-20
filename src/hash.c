@@ -22,22 +22,14 @@ int hash(char *key, int lineNo) {
     return slot % TABLESIZE;
 }
 
-
-static bool *hash_table = NULL;
-
-// set *$hash_table to &table provided by main.c !
-void init_hash_table(bool *table) {
-    hash_table = table;
-}
-
-bool hash_insert(char *key, int lineNo) {
+bool hash_insert(Hashtable hash_table, char *key, int lineNo) {
     // printf("%s <%d>\n", key, lineNo);
     int slot = hash(key, lineNo);
     if (hash_table[slot] != false) return false; // collision ! slot is occupied.
     return (hash_table[slot] = true);
 };
 
-bool hash_lookup(char *key, int lineNo) {
+bool hash_lookup(Hashtable hash_table, char *key, int lineNo) {
     // printf("%s <%d>\n", key, lineNo);
     int slot = hash(key, lineNo);
     return hash_table[slot];
@@ -45,7 +37,7 @@ bool hash_lookup(char *key, int lineNo) {
     // return (hash_table[slot] = true);
 }
 
-void print_hash(uint8_t limit, bool true_only) {
+void print_hash(Hashtable hash_table, uint8_t limit, bool true_only) {
     printf("Slots:\titems:\n");
     // printf("limit: <%d>\n", limit); // NULL means 0;
     limit = (limit == 0 || limit > TABLESIZE) ? TABLESIZE : limit;
@@ -70,7 +62,7 @@ void print_hash(uint8_t limit, bool true_only) {
 //     return true;
 // }
 
-void hash_delete(char *key, int lineNo) {
+void hash_delete(Hashtable hash_table, char *key, int lineNo) {
     int slot = hash(key, lineNo);
     hash_table[slot] = false;
 }

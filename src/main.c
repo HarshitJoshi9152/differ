@@ -64,10 +64,8 @@ int main(int argc, char *argv[]) {
     // printlines(&f_split_by_lines_1);
     // printlines(&f_split_by_lines_2);
 
-    bool hash_table[TABLESIZE] = {0};
+    Hashtable hash_table = {0};
     uint64_t tableItemsCount = 0;
-
-    init_hash_table(&hash_table);
 
     // recording lines' unique existence from file 1 into hash_table.
     LinkedLines *tempLine = &f_split_by_lines_1;
@@ -76,7 +74,7 @@ int main(int argc, char *argv[]) {
         char* line = tempLine->data;
 
         // int slot = hash(line);
-        bool inserted = hash_insert(line, linesCount);
+        bool inserted = hash_insert(&hash_table, line, linesCount);
         if (inserted == false) {
             fprintf(stderr, "COllision ! @ %d %s\n line: %s <%ld>\n", __LINE__, __FILE__, line, linesCount);
             exit(1);
@@ -96,7 +94,7 @@ int main(int argc, char *argv[]) {
         char* line = tempLine->data;
 
         // int slot = hash(line);
-        bool found = hash_lookup(line, linesCount);
+        bool found = hash_lookup(&hash_table, line, linesCount);
         if (found == true) {
             tableItemsCount--;
         } else {
