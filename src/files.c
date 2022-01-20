@@ -58,7 +58,7 @@ LinkedLines splitByLines(const char *str)
     for (size_t i = 0; i < len; ++i)
     {
         char c = str[i];
-        // checking if our allocated buffer has overflowed its capacity.
+        // checking if our allocated buffer has overflowed its capacity. for the current line.
         if (charCount > buffer_size) {
             // we need to realloc it !
             buffer_size += buffer_size;
@@ -110,6 +110,7 @@ void printlines(LinkedLines* line)
         printf("%s", tempLine->data);
         // printf("<tempLine->data %p>\n", tempLine->data);
         // printf("<tempLine %p>\n", tempLine);
+        // printf("<stlen %ld>\n", strlen(tempLine->data));
 
         // if (tempLine->nextLine == NULL) break;
         tempLine = tempLine->nextLine;
@@ -120,10 +121,11 @@ void freeLinkedLines(LinkedLines* line)
 {
     LinkedLines *tempLine = line;
     while(tempLine) {
-        free(tempLine->data);
-        // free(tempLine); //double free error !
+        LinkedLines *nextLine = tempLine->nextLine;
 
-        // if (tempLine->nextLine == NULL) break;
-        tempLine = tempLine->nextLine;
+        free(tempLine->data);
+        free(tempLine);
+
+        tempLine = nextLine;
     }
 }

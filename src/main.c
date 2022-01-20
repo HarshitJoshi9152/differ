@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
-// #include <unistd.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <assert.h>
 
 #include "hash.h"
 #include "files.h"
@@ -33,21 +34,23 @@ int main(int argc, char *argv[]) {
     {
         fprintf(stderr, "USAGE: %s <filepath1> <filepath2>\n", program);
         fprintf(stderr, "ERROR: file_path1 not provided\n");
+        exit(1);
     }
     const char* file_path2 = *argv++;
     if (file_path2 == NULL)
     {
         fprintf(stderr, "USAGE: %s <filepath1> <filepath2>\n", program);
         fprintf(stderr, "ERROR: file_path2 not provided\n");
+        exit(1);
     }
 
-    // to be taken in from the argv
-    const char* demoFilename1 = "../test/file1.txt";
-    const char* demoFilename2 = "../test/file2.txt";
+    // // to be taken in from the argv
+    // const char* demoFilename1 = "../test/file1.txt";
+    // const char* demoFilename2 = "../test/file2.txt";
 
     // reading files !
-    char *f1 = readFile(demoFilename1);
-    char *f2 = readFile(demoFilename2);
+    char *f1 = readFile(file_path1);
+    char *f2 = readFile(file_path2);
 
     // printf(f1);
     // printf(f2);
