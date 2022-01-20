@@ -54,8 +54,10 @@ int main(int argc, char *argv[]) {
 
 
     // spliting file contents by lines.
-    LinkedLines f_split_by_lines_1 = splitByLines(f1);
-    LinkedLines f_split_by_lines_2 = splitByLines(f2);
+    uint64_t f1_linesCount = 0;
+    LinkedLines f_split_by_lines_1 = splitByLines(f1, f1_linesCount);
+    uint64_t f2_linesCount = 0;
+    LinkedLines f_split_by_lines_2 = splitByLines(f2, f2_linesCount);
 
     // freeing files in memory
     free(f1);
@@ -70,6 +72,8 @@ int main(int argc, char *argv[]) {
     // recording lines' unique existence from file 1 into hash_table.
     LinkedLines *tempLine = &f_split_by_lines_1;
     uint64_t linesCount = 1;
+    uint32_t *linesSlots = calloc(f1_linesCount, sizeof(uint32_t)) // to store the slotNo of the lines (line no is index and val is slotNo for that line)
+
     while(tempLine) {
         char* line = tempLine->data;
 

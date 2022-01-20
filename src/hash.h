@@ -3,7 +3,9 @@
 #include <stdbool.h>
 
 // should TABLESIZE be determined dynamically according to the no of lines in the files !? 
-#define TABLESIZE 100
+#define TABLESIZE 1000
+
+typedef bool * Hashtable;
 
 typedef bool Hashtable[TABLESIZE]; // this is BAD abstraction
 
