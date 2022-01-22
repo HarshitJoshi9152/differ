@@ -77,3 +77,23 @@ if we imagine writing the bucket index as a binary number, a small change to the
 randomly flip the bits in the bucket index. This is called information diffusion. 
 For example, a one-bit change to the key should cause every bit in the index to flip with 1/2 probability.
 */
+
+
+// uint64_t* matches should contain the slot numbers of the matching lines
+uint64_t ht_compare(Hashtable ht1, Hashtable ht2, uint64_t* matches)
+{
+    // print_hash(ht1, 0, true);
+    // print_hash(ht2, 0, true);
+
+    uint64_t matches_i = 0;
+
+    for (uint64_t i = 0; i < TABLESIZE; ++i)
+    {
+        if (ht1[i] == true && ht2[i] == true)
+        {
+            matches[matches_i++] = i;
+        }
+    }
+
+    return matches_i;
+}

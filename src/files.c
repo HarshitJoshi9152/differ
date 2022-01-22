@@ -99,6 +99,14 @@ LinkedLines splitByLines(const char *str, uint64_t *linesCount)
             line->nextLine = next;
             line = next;
         }
+        else if (i == len - 1)
+        {
+            // adding NULL character at end of string;
+            line->data[charCount++] = '\x00';
+            // reseting variables;
+            lC++;
+            line->nextLine = NULL;
+        }
     }
 
     *linesCount = lC;
@@ -134,17 +142,18 @@ void freeLinkedLines(LinkedLines* line)
 }
 
 // would the pointer get mutated ?, can i do int* arrya = {1,6,2,34,5}; arrya[1] = 4; ??
-void insertLinkedLinesIntoHashTable(Hashtable *ht, LinkedLines *ll, uint32_t *linesSlots)
+void insertLinkedLinesIntoHashTable(Hashtable ht, LinkedLines *ll, uint32_t *linesSlots)
 {   
+    uint64_t linesCount = 1; // startign with 0 will result in bad hash function output value.
     while(ll) {
         char* line = ll->data;
-        uint64_t linesCount = 1; // startign with 0 will result in bad hash function output value.
 
-        uint32_t slot = hash(line, linesCount);
+        uint32_t slot = hash(line, linesCount); // this will be called again in hash_insert !
+
         bool inserted = hash_insert(ht, line, linesCount);
 
         if (inserted == false) {
-            fprintf(stderr, "COllision ! @ %d %s\n line: %s <%ld>\n", __LINE__, __FILE__, line, linesCount);
+            fprintf(stderr, "hash_table COllision when inserting ! @ %d %s\n line: %s <%ld>\n", __LINE__, __FILE__, line, linesCount);
             exit(1);
         }
 
@@ -152,5 +161,24 @@ void insertLinkedLinesIntoHashTable(Hashtable *ht, LinkedLines *ll, uint32_t *li
         linesCount++;
         ll = ll->nextLine;
     }
-    
+}
+
+// The LinkedLines instance here is expected to be filtered for matching lines.
+void printLinesSelectively(LinkedLines *line, uint32_t *slots, bool matching)
+{
+    LinkedLines *tempLine = line;
+    uint64_t lineCount = 1;
+    while(tempLine)
+    {
+        uint64_t slot = slots[lineCount - 1];
+        bool shouldPrint = (matching) ? slot == 0 : slot != 0; // could also use !slot : slot
+        // non 0 = non matching, 0 slot means matching. (for a filtered LinkedLines instance)
+        if (shouldPrint)
+        {
+            printf("%ld\t%s", lineCount, tempLine->data); // the data includes the new line.
+        }
+
+        lineCount++;
+        tempLine = tempLine->nextLine;
+    }
 }
