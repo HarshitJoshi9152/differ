@@ -77,7 +77,6 @@ int main(int argc, char *argv[]) {
 
     insertLinkedLinesIntoHashTable(f1_hash_table, &f_split_by_lines_1, f1_linesSlots);
 
-
     // make hash_table 2.
     Hashtable f2_hash_table = {0};
     // the next line is dangerous
@@ -183,6 +182,8 @@ int main(int argc, char *argv[]) {
     free(f1_linesSlots);
     free(f2_linesSlots);
     free(matching_slots);
+    free(f_split_by_lines_1.data);
+    free(f_split_by_lines_2.data);
     freeLinkedLines(f_split_by_lines_1.nextLine); // f_split_by_lines_1 is allocated on the stack !
     freeLinkedLines(f_split_by_lines_2.nextLine);
 

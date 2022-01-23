@@ -14,11 +14,11 @@ int hash(char *key, int lineNo) {
     uint32_t slot = 0;
 
     for (uint8_t i = 0; i < strlen(key); i++) {
-        slot += key[i];
+        slot += key[i] - (lineNo + i) / key[i]; // but division does not have great performance !
     }
 
     slot = slot * strlen(key) * lineNo;
-
+    // printf("%s %d", key, slot% TABLESIZE);
     return slot % TABLESIZE;
 }
 

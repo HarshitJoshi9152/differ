@@ -102,7 +102,8 @@ LinkedLines splitByLines(const char *str, uint64_t *linesCount)
         else if (i == len - 1)
         {
             // adding NULL character at end of string;
-            line->data[charCount++] = '\x00';
+            printf("\n\n%c\n", c);
+            line->data[charCount] = '\x00';
             // reseting variables;
             lC++;
             line->nextLine = NULL;
@@ -142,6 +143,7 @@ void freeLinkedLines(LinkedLines* line)
 }
 
 // would the pointer get mutated ?, can i do int* arrya = {1,6,2,34,5}; arrya[1] = 4; ??
+// but the first LinkedLine is allocated on the stack and c makes a pointer to the LinkedLines object when we pass it in so we are safe???
 void insertLinkedLinesIntoHashTable(Hashtable ht, LinkedLines *ll, uint32_t *linesSlots)
 {   
     uint64_t linesCount = 1; // startign with 0 will result in bad hash function output value.
