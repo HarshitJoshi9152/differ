@@ -37,7 +37,7 @@ char *readFile(const char* filename)
     return data;
 }
 
-LinkedLines splitByLines(const char *str, uint64_t *linesCount)
+LinkedLines* splitByLines(const char *str, uint64_t *linesCount)
 {
     uint64_t len = strlen(str);
     size_t lC = 0;
@@ -52,9 +52,11 @@ LinkedLines splitByLines(const char *str, uint64_t *linesCount)
         // todo: we should free memory before exiting.
         exit(1);
     }
-    LinkedLines first = {.data = buffer, .nextLine = NULL};
+    LinkedLines *first = calloc(sizeof(LinkedLines), 1);
+    first->data = buffer;
+    first->nextLine = NULL;
 
-    LinkedLines *line = &first;
+    LinkedLines *line = first;
 
     for (size_t i = 0; i < len; ++i)
     {
@@ -131,14 +133,13 @@ void printlines(LinkedLines* line)
 
 void freeLinkedLines(LinkedLines* line)
 {
-    LinkedLines *tempLine = line;
-    while(tempLine) {
-        LinkedLines *nextLine = tempLine->nextLine;
+    while(line) {
+        LinkedLines *nextLine = line->nextLine;
 
-        free(tempLine->data);
-        free(tempLine);
+        free(line->data);
+        free(line);
 
-        tempLine = nextLine;
+        line = nextLine;
     }
 }
 

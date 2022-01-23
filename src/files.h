@@ -9,7 +9,7 @@ typedef struct linkedLines {
 } LinkedLines;
 
 char *readFile(const char* filename);
-LinkedLines splitByLines(const char *str, uint64_t *linesCount);
+LinkedLines *splitByLines(const char *str, uint64_t *linesCount);
 void printlines(LinkedLines* line);
 void freeLinkedLines(LinkedLines* line);
 void insertLinkedLinesIntoHashTable(Hashtable ht, LinkedLines *ll, uint32_t *linesSlots);

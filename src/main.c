@@ -59,30 +59,30 @@ int main(int argc, char *argv[]) {
 
     // spliting file contents by lines.
     uint64_t f1_linesCount = 0;
-    LinkedLines f_split_by_lines_1 = splitByLines(f1, &f1_linesCount);
+    LinkedLines *f_split_by_lines_1 = splitByLines(f1, &f1_linesCount);
     uint64_t f2_linesCount = 0;
-    LinkedLines f_split_by_lines_2 = splitByLines(f2, &f2_linesCount);
+    LinkedLines *f_split_by_lines_2 = splitByLines(f2, &f2_linesCount);
 
     // freeing files in memory
     free(f1);
     free(f2);
 
-    // printlines(&f_split_by_lines_1);
-    // printlines(&f_split_by_lines_2);
+    // printlines(f_split_by_lines_1);
+    // printlines(f_split_by_lines_2);
 
     // make hash_table 1.
     Hashtable f1_hash_table = {0};
     // the next line is dangerous
     uint32_t *f1_linesSlots = calloc(f1_linesCount, sizeof(uint32_t)); // to store the slotNo of the lines (line no is index and val is slotNo for that line)
 
-    insertLinkedLinesIntoHashTable(f1_hash_table, &f_split_by_lines_1, f1_linesSlots);
+    insertLinkedLinesIntoHashTable(f1_hash_table, f_split_by_lines_1, f1_linesSlots);
 
     // make hash_table 2.
     Hashtable f2_hash_table = {0};
     // the next line is dangerous
     uint32_t *f2_linesSlots = calloc(f2_linesCount, sizeof(uint32_t)); // to store the slotNo of the lines (line no is index and val is slotNo for that line)
 
-    insertLinkedLinesIntoHashTable(f2_hash_table, &f_split_by_lines_2, f2_linesSlots);
+    insertLinkedLinesIntoHashTable(f2_hash_table, f_split_by_lines_2, f2_linesSlots);
     
     // compare and take the sets approach
     // ALTHOUGH we can probably just compare the $linesSlots at this point lol
@@ -167,25 +167,24 @@ int main(int argc, char *argv[]) {
     printf("\n");
     
     printf("Matching lines :\n");
-    printLinesSelectively(&f_split_by_lines_1, f1_linesSlots, true);
+    printLinesSelectively(f_split_by_lines_1, f1_linesSlots, true);
     if (f1_new_line_ending == false) printf("\n");
     
     printf("\nnon matching lines %s:\n", file_path1);
-    printLinesSelectively(&f_split_by_lines_1, f1_linesSlots, false);
+    printLinesSelectively(f_split_by_lines_1, f1_linesSlots, false);
     if (f1_new_line_ending == false) printf("\n");
     
     printf("\nnon matching lines %s:\n", file_path2);
-    printLinesSelectively(&f_split_by_lines_2, f2_linesSlots, false);
+    printLinesSelectively(f_split_by_lines_2, f2_linesSlots, false);
     if (f2_new_line_ending == false) printf("\n");
 
     // memory allocataion should be avoided.
     free(f1_linesSlots);
     free(f2_linesSlots);
     free(matching_slots);
-    free(f_split_by_lines_1.data);
-    free(f_split_by_lines_2.data);
-    freeLinkedLines(f_split_by_lines_1.nextLine); // f_split_by_lines_1 is allocated on the stack !
-    freeLinkedLines(f_split_by_lines_2.nextLine);
+
+    freeLinkedLines(f_split_by_lines_1);
+    freeLinkedLines(f_split_by_lines_2);
 
     return 0;
 }
